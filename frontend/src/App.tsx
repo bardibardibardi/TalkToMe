@@ -4,7 +4,7 @@ import './App.css';
 
 // Sample video URL - replace with your actual video URL
 const SAMPLE_VIDEO_URL = 'https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
-const API_URL = process.env.NODE_ENV === 'production' 
+const API_URL = import.meta.env.PROD 
   ? '/api/process' 
   : 'http://localhost:3001/api/process';
 
@@ -235,7 +235,7 @@ function App() {
                   }
                 }}
                 dangerouslySetInnerHTML={{ 
-                  __html: marked(summary).replace(/<a href="[^"]*(\d{2}:\d{2})[^"]*">([^<]+)<\/a>/g, (match, timestamp, display) => {
+                  __html: marked(summary).then ? '' : (marked(summary) as string).replace(/<a href="[^"]*(\d{2}:\d{2})[^"]*">([^<]+)<\/a>/g, (_match: string, timestamp: string, _display: string) => {
                     // Extract timestamp and convert to seconds
                     const [minutes, seconds] = timestamp.split(':').map(Number);
                     const totalSeconds = minutes * 60 + seconds;
