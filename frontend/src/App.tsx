@@ -235,13 +235,17 @@ function App() {
                   }
                 }}
                 dangerouslySetInnerHTML={{ 
-                  __html: marked(summary).then ? '' : (marked(summary) as string).replace(/<a href="[^"]*(\d{2}:\d{2})[^"]*">([^<]+)<\/a>/g, (_match: string, timestamp: string, _display: string) => {
-                    // Extract timestamp and convert to seconds
-                    const [minutes, seconds] = timestamp.split(':').map(Number);
-                    const totalSeconds = minutes * 60 + seconds;
-                    
-                    return `<a href="javascript:void(0)" data-time="${totalSeconds}" class="timestamp-link">[${timestamp}]</a>`;
-                  })
+                  __html: (() => {
+                    const markedResult = marked(summary);
+                    const htmlString = typeof markedResult === 'string' ? markedResult : '';
+                    return htmlString.replace(/<a href="[^"]*(\d{2}:\d{2})[^"]*">([^<]+)<\/a>/g, (_match: string, timestamp: string, _display: string) => {
+                      // Extract timestamp and convert to seconds
+                      const [minutes, seconds] = timestamp.split(':').map(Number);
+                      const totalSeconds = minutes * 60 + seconds;
+                      
+                      return `<a href="javascript:void(0)" data-time="${totalSeconds}" class="timestamp-link">[${timestamp}]</a>`;
+                    });
+                  })()
                 }} 
               />
               
