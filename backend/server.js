@@ -24,10 +24,8 @@ app.use(express.json());
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadDir = path.join(__dirname, 'uploads');
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir);
-    }
+    // Use /tmp directory which is writable in Vercel serverless functions
+    const uploadDir = '/tmp';
     cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
